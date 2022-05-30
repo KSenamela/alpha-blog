@@ -1,16 +1,25 @@
 class ArticlesController < ApplicationController
 
   def new
-    @article = Article.new
+    @article = Article.new #create an instance of Article database
   end
 
+  # The create method is responsible for creating a new Article(saves data into database)
   def create
     # render plain: params[:article].inspect --this line of code prints out the contents of the article form
     @article = Article.new(article_params) #article_params is a method that return the article information entred in the browser
-    @article.save #saving in the database
-    redirect_to articles_show(@article)
+    if @article.save #saving in the database
+      flash[:notice] = "Submitted Succesfully!"
+      redirect_to article_path(@article)
+    else
+      render :new
+    end
   end
 
+
+  def show
+    @article = Article.find(params[:id])
+  end
   #This method will store the entered info on the form
   private
     def article_params
